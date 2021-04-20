@@ -1,3 +1,7 @@
+/**
+ * used help from https://github.com/saucecode/threejs-demos/blob/master/09_Shooting/demo.js
+ */
+
 import * as THREE from '/three.js-dev/build/three.module.js';
 
 // Bullets array
@@ -22,7 +26,8 @@ export function shoot(camera, scene) {
     // calculate objects intersecting the picking ray
     const intersects = raycaster.intersectObjects( scene.children );
     for ( let i = 0; i < intersects.length; i ++ ) {
-        //   intersects[ i ].object.material.color.set( 0xff0000 );
+        // do something
+        //intersects[ i ].object.material.color.set( 0xff0000 );
         //console.log(intersects[ i ].object.name);
     }
 
@@ -47,7 +52,6 @@ export function shoot(camera, scene) {
 
         bullet.scale.set(0.5, 0.5, 0.5);
         bullet.position.set(camera.position.x, camera.position.y - 2, camera.position.z - 1);
-
 
         // set the velocity of the bullet
         bullet.velocity = new THREE.Vector3(raycaster.ray.direction.x, raycaster.ray.direction.y, raycaster.ray.direction.z);
