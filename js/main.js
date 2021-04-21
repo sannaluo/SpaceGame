@@ -8,8 +8,6 @@ import * as controls from '/js/controls.js';
 //initialize
 //
 
-
-
 //renderer init
 const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -25,9 +23,7 @@ document.body.appendChild(renderer.domElement);
 
 //init variables
 const clock = new THREE.Clock();
-
-let oldX = 0;
-let oldY = 0;
+const movementSpeed = 1.8;
 
 //scene init
 const scene = new THREE.Scene();
@@ -43,7 +39,7 @@ const texture = loader.load([
 scene.background = texture;
 
 //camera init
-const fov = 60;
+const fov = 80;
 const aspect = window.innerWidth / window.innerHeight;
 const near = 1;
 const far = 1000;
@@ -63,11 +59,11 @@ scene.add(light);
 
 // controls init
 const flyControls = new FlyControls(camera, renderer.domElement);
-//flyControls.autoForward = true;
+flyControls.autoForward = true;
 flyControls.dragToLook = false;
 flyControls.domElement = renderer.domElement;
 flyControls.rollSpeed = Math.PI / 5;
-flyControls.movementSpeed = 1;
+flyControls.movementSpeed = movementSpeed;
 
 
 //player init
@@ -76,8 +72,8 @@ const material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
 const cube = new THREE.Mesh( geometry, material );
 camera.add(cube);
 
-cube.position.set(0,-1,-3);
-cube.scale.set(0.5, 0.5, 0.5);
+cube.position.set(0,-1.5,-3);
+cube.scale.set(0.4, 0.1, 0.6);
 
 
 // helper init
@@ -96,25 +92,6 @@ scene.add(axesHelper);
 //
 //functions
 //
-const rotateWithMouse = (e) => {
-
-    if (e.pageX < oldX) {
-        
-            cube.rotation.set(0,0.1,0);
-       
-    } else if (e.pageX > oldX) {
-      
-            cube.rotation.set(0,-0.1,0);
-        
-    }
-
-
-    console.log(e.pageX);
-
-    oldX = e.pageX;
-    oldY = e.pageY;
-};
-
 const onWindowResize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -123,23 +100,21 @@ const onWindowResize = () => {
 };
 const animate = () => {
     let delta = clock.getDelta();
-
     requestAnimationFrame(animate);
-
+    controls.lookAtMouseLocation(cube);
+    controls.changeSpeed(camera, flyControls, fov, movementSpeed);
     flyControls.update(delta);
+    camera.updateProjectionMatrix();
 
- 
     renderer.render(scene, camera);
 };
-
-
 
 
 //
 //main loop
 //
 
-window.addEventListener('mousemove', (e) => rotateWithMouse(e), false);
+window.addEventListener('mousemove', (e) => controls.onMouseMove(e), false);
 window.addEventListener('resize', () => onWindowResize(), false);
 
 
