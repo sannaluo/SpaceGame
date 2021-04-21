@@ -16,7 +16,7 @@ const rayDirection = new THREE.Vector2();
 rayDirection.x = 0;
 rayDirection.y = 0;
 
-function shootAt(scene, camera, pos) {
+function shootAt(scene, camera, pos, playerCube) {
 
     // go through bullets array and update position
     // remove bullets when appropriate
@@ -38,8 +38,11 @@ function shootAt(scene, camera, pos) {
             new THREE.MeshBasicMaterial({color:0xffffff})
         );
 
-        bullet.scale.set(0.5, 0.5, 0.5);
-        bullet.position.set(camera.position.x, camera.position.y - 2, camera.position.z - 1);
+        bullet.scale.set(0.1, 0.1, 0.1);
+
+        console.log(camera.position);
+
+        bullet.position.set(camera.position.x, camera.position.y -1.5, camera.position.z -3 );
 
         // set the velocity of the bullet
         bullet.velocity = new THREE.Vector3(pos.x, pos.y, pos.z);
@@ -84,36 +87,44 @@ function moveBullets() {
  * @param camera
  * @param scene
  */
-export function shoot(camera, scene) {
+export function shoot(camera, scene, playerCube) {
     raycaster.setFromCamera( rayDirection, camera );
 
     // calculate objects intersecting the picking ray
     let intersects = raycaster.intersectObjects( scene.children );
 
+   // let objects;
+
     moveBullets();
 
     if(intersects.length > 0) {
+       // console.log("intersect");
 
         for(let i = 0; i < intersects.length; i++){
-            let position = intersects[i].object.position;
-            // targeting(scene);
+            if(intersects[i].object.tag === "destroyable") {
+                let position = intersects[i].object.position;
+                // targeting(scene);
 
-            // jos ammutaan 2s ja sen jälkeen kohde on tähtäimessä, poistetaan kohde
-            return new Promise(function(resolve, reject) {
-                setTimeout(resolve, 2000);
-                shootAt(scene, camera, position);
+               // console.log(intersects[i].object);
 
-            }).then(function() {
+                // jos ammutaan 2s ja sen jälkeen kohde on tähtäimessä, poistetaan kohde
+                return new Promise(function (resolve, reject) {
+                    setTimeout(resolve, 2000);
+                    //console.log(playerCube);
+                    shootAt(scene, camera, position, playerCube);
 
-                intersects = raycaster.intersectObjects( scene.children );
-                for ( let i = 0; i < intersects.length; i ++ ) {
-                    if(intersects[i].object.tag === "destroyable") {
-                        //targeting(scene);
-                        scene.remove(intersects[i].object);
-                        // pitäiskö poistaa bulletit ettei ne jää avaruuteen?
+                }).then(function () {
+
+                    intersects = raycaster.intersectObjects(scene.children);
+                    for (let i = 0; i < intersects.length; i++) {
+                        if (intersects[i].object.tag === "destroyable") {
+                            //targeting(scene);
+                            scene.remove(intersects[i].object);
+                            // pitäiskö poistaa bulletit ettei ne jää avaruuteen?
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 }
