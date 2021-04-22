@@ -40,11 +40,12 @@ function shootAt(scene, camera, pos, playerCube) {
 
         bullet.scale.set(0.1, 0.1, 0.1);
 
-        console.log(camera.position);
+        //console.log(camera.position);
 
         bullet.position.set(camera.position.x, camera.position.y -1.5, camera.position.z -3 );
 
         // set the velocity of the bullet
+        //console.log(pos);
         bullet.velocity = new THREE.Vector3(pos.x, pos.y, pos.z);
 
         // after 1000ms, set alive to false and remove from scene and array

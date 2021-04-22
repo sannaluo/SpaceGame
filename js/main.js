@@ -6,7 +6,7 @@ import * as controls from '/js/controls.js';
 import {shoot} from '/js/shooting.js';
 // import {breaking} from '/js/breaking.js';
 
-
+import {countDestroyableObjects} from "/js/counter.js";
 
 
 //
@@ -132,6 +132,7 @@ const animate = () => {
     flyControls.update(delta);
     
     shoot(camera, scene, playerCube);
+    countDestroyableObjects(scene, camera);
 
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);
