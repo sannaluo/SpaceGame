@@ -132,7 +132,7 @@ const animate = () => {
     flyControls.update(delta);
     
     shoot(camera, scene, playerCube);
-    countDestroyableObjects(scene, camera);
+    countDestroyableObjects(scene);
 
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);

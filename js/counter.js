@@ -9,7 +9,12 @@ import * as THREE from '/three.js-dev/build/three.module.js';
 //const counterSprite = new THREE.Sprite( material );
 
 
-
+/**
+ * Finds objects with given tag, returns a list
+ * @param tag
+ * @param result
+ * @returns {*}
+ */
 THREE.Object3D.prototype.getObjectsByTag = function( tag, result ) {
 
     // check the current object
@@ -26,8 +31,11 @@ THREE.Object3D.prototype.getObjectsByTag = function( tag, result ) {
     return result;
 };
 
-
-function displayDestroyableObjects(objects, scene, camera) {
+/**
+ * Changes the inner text of counter element
+ * @param objects
+ */
+function displayDestroyableObjects(objects) {
 
     let amount = 0;
 
@@ -45,12 +53,15 @@ function displayDestroyableObjects(objects, scene, camera) {
 
 }
 
-
-export function countDestroyableObjects(scene, camera) {
+/**
+ * Main function
+ * @param scene
+ */
+export function countDestroyableObjects(scene) {
     let objects = [];
     scene.getObjectsByTag( 'destroyable', objects ); // the found objects are written in the given array
     //console.log(objects);
-    displayDestroyableObjects(objects, scene, camera);
+    displayDestroyableObjects(objects );
 
 }
 
