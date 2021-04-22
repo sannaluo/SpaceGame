@@ -7,7 +7,7 @@ import {shoot} from '/js/shooting.js';
 // import {breaking} from '/js/breaking.js';
 
 import {countDestroyableObjects} from "/js/counter.js";
-
+import {targeting} from "/js/targeting.js";
 
 //
 //initialize
@@ -133,6 +133,7 @@ const animate = () => {
     
     shoot(camera, scene, playerCube);
     countDestroyableObjects(scene);
+    targeting();
 
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);
