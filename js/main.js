@@ -36,12 +36,12 @@ const movementSpeed = 2.8;
 const scene = new THREE.Scene();
 const loader = new THREE.CubeTextureLoader();
 const worldTexture = loader.load([
-    './img/px (1).png',
-    './img/nx (1).png',
-    './img/py (1).png',
-    './img/ny (1).png',
-    './img/pz (1).png',
-    './img/nz (1).png',
+    './img/px.png',
+    './img/nx.png',
+    './img/py.png',
+    './img/ny.png',
+    './img/pz.png',
+    './img/nz.png',
 ])
 scene.background = worldTexture;
 
@@ -224,7 +224,7 @@ const animate = () => {
 
     shooting.updateRaycast(playerCube);
     shooting.moveBullets(delta, scene, camera);
-    //shooting.shoot(delta, 0.2, playerCube, scene, camera);
+    shooting.shoot(delta, 0.2, playerCube, scene, camera);
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);
     composer.render();
