@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Galactic destoyer</title>
-    <link type="text/css" rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
-</head>
-<body>
-<script type="module" src="js/main.js"></script>
-<script type="module" src="js/menu.js"></script>
-<div id="counter"></div>
-<div id="menuContainer">
-    <div>
-        <button class="selectBtn" id="alus">Ship number 1</button>
-    </div>
-   <div>
-       <button class="selectBtn" id="destroyer">Devastator</button>
-   </div>
-</div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Galactic destoyer</title>
+        <link type="text/css" rel="stylesheet" href="main.css">
+        <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <script type="module" src="js/main.js"></script>
+        <script type="module" src="js/menu.js"></script>
+        <div id="counter"></div>
+        <div id="menuContainer">
+            <div class="btnContainer" id="buttonContainer1">
+                <div class="menuframes selectBtn">
+                    <img src="/img/ship01placeholder.png">
+                    <h3 class="selectBtn" id="alus">Ship number 1</h3>
+                </div>
+            </div>
+           <div class="btnContainer" id="buttonContainer2">
+               <div class="menuframes selectBtn">
+                    <img src="/img/devastator.png">
+                    <h3 class="selectBtn" id="destroyer">Devastator</h3>
+               </div>
+           </div>
+        </div>
+    </body>
 </html>
