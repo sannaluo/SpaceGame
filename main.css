@@ -34,18 +34,18 @@ body {
     width: 80%;
 }
 
-.menuframes {
+.selectBtn {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.menuframes:hover {
+.selectBtn:hover {
     background-color: rgba(22,132,184,0.2);
 }
 
-.selectBtn {
+.menuframes {
     border: 6px double rgba(22,132,184,0.5);
     border-radius: 1rem;
     background-color: transparent;
