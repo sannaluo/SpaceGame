@@ -10,7 +10,7 @@ import {loadModel} from '/js/modelLoader.js';
 
 // import {shoot} from '/js/shooting.js';
 // import {breaking} from '/js/breaking.js';
-
+import {countDestroyableObjects} from "/js/counter.js";
 import * as shooting from '/js/shooting2.js';
 
 //
@@ -221,6 +221,7 @@ const animate = () => {
     controls.changeSpeed(camera, flyControls, fov, movementSpeed);
     flyControls.update(delta);
 
+    countDestroyableObjects(scene);
 
     shooting.updateRaycast(playerCube);
     shooting.moveBullets(delta, scene, camera);
