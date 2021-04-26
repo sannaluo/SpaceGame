@@ -13,6 +13,8 @@ import {loadModel} from '/js/modelLoader.js';
 import {countDestroyableObjects} from "/js/counter.js";
 import * as shooting from '/js/shooting2.js';
 
+import * as menu from '/js/menu.js';
+
 //
 //initialize
 //
@@ -42,7 +44,7 @@ const worldTexture = loader.load([
     './img/ny.png',
     './img/pz.png',
     './img/nz.png',
-])
+]);
 scene.background = worldTexture;
 
 
@@ -214,7 +216,12 @@ const onWindowResize = () => {
     composer.setSize(window.innerWidth, window.innerHeight);
 
 };
+
+
 const animate = () => {
+
+
+
     let delta = clock.getDelta();
     requestAnimationFrame(animate);
     controls.lookAtMouseLocation(playerCube);
@@ -237,11 +244,26 @@ const animate = () => {
 //main loop
 //
 
-loadModel('/models/alus.gltf', playerCube, tuomaanalus,  worldTexture);
-shooting.initRaycast(playerCube, scene, 7);
-window.addEventListener('mousemove', (e) => controls.onMouseMove(e), false);
-window.addEventListener('resize', () => onWindowResize(), false);
-animate();
+const buttons = document.getElementsByClassName("selectBtn");
+
+if(buttons){
+    for(let i = 0; i < buttons.length; i++) {
+
+        buttons[i].addEventListener('click', function () {
+            let selected = buttons[i].id;
+            menu.hideMenu();
+
+            loadModel('/models/'+selected+'.gltf', playerCube, tuomaanalus,  worldTexture);
+            shooting.initRaycast(playerCube, scene, 7);
+            window.addEventListener('mousemove', (e) => controls.onMouseMove(e), false);
+            window.addEventListener('resize', () => onWindowResize(), false);
+            animate();
+        });
+    }
+}
+
+
+
 
 
 /////////////////////////////////////////
