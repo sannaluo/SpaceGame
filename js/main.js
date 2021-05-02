@@ -6,12 +6,13 @@ import { EffectComposer } from '/three.js-dev/examples/jsm/postprocessing/Effect
 import { RenderPass } from '/three.js-dev/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from '/three.js-dev/examples/jsm/postprocessing/UnrealBloomPass.js';
 import * as controls from '/js/controls.js';
+import * as shooting from '/js/shooting2.js';
 import {loadModel} from '/js/modelLoader.js';
+import {createStars, createDestroyables} from '/js/particles.js';
 
 // import {shoot} from '/js/shooting.js';
 // import {breaking} from '/js/breaking.js';
 
-import * as shooting from '/js/shooting2.js';
 
 //
 //initialize
@@ -30,7 +31,7 @@ document.body.appendChild(renderer.domElement);
 
 //init variables
 const clock = new THREE.Clock();
-const movementSpeed = 2.8;
+const movementSpeed = 5;
 
 //scene init
 const scene = new THREE.Scene();
@@ -44,7 +45,6 @@ const worldTexture = loader.load([
     './img/nz.png',
 ])
 scene.background = worldTexture;
-
 
 //camera init
 const fov = 85;
@@ -82,14 +82,13 @@ playerCube.material.opacity = 0;
 playerCube.position.set(0, -0.5, -1);
 
 camera.add(playerCube);
-
-
 const tuomaanalus = [
     {
         name: "runko",
         roughness: 0.8,
         clearcoat: 0.5, 
         clearcoatRoughness: 0.5,
+        envMapIntensity: 1,
     },
     {
         name: "musta",
@@ -116,9 +115,10 @@ const tuomaanalus = [
 //bloom init
 const params = {
     exposure: 1,
-    bloomStrength: 0.5,
-    bloomThreshold: 0.5,
-    bloomRadius: 0.5
+    bloomStrength: 0.8
+    ,
+    bloomThreshold: 0.55,
+    bloomRadius: 0,
 };
 const renderScene = new RenderPass(scene, camera);
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
@@ -130,69 +130,11 @@ const composer = new EffectComposer(renderer);
 composer.addPass(renderScene);
 composer.addPass(bloomPass);
 
-//environment init 
-const dustGeometry = new THREE.BufferGeometry();
-const dustMaterials = [];
-const dustVertices = [];
-let dustParticles;
 
-for (let i = 0; i < 150000; i++) {
-
-    const x = THREE.MathUtils.randFloatSpread(1);
-    const y = THREE.MathUtils.randFloatSpread(1);
-    const z = THREE.MathUtils.randFloatSpread(1);
-
-    dustVertices.push(x, y, z);
-}
-dustGeometry.setAttribute('position', new THREE.Float32BufferAttribute(dustVertices, 3));
-const dustParameters = [
-    [0xFFFBAE, 0.05],
-    [0xFFCEAE, 0.02],
-    [0xFFE3AE, 0.051],
-    [0xFFF9AE, 0.02],
-    [0xFFF2AE, 0.01]
-];
-
-for (let i = 0; i < dustParameters.length; i++) {
-
-    const color = dustParameters[i][0];
-    const size = dustParameters[i][1];
-
-    dustMaterials[i] = new THREE.PointsMaterial({ size: size, blending: THREE.AdditiveBlending, depthTest: true });
-    dustMaterials[i].color.setHex(color,);
-
-    dustParticles = new THREE.Points(dustGeometry, dustMaterials[i]);
-
-    dustParticles.rotation.x = Math.random() * 6;
-    dustParticles.rotation.y = Math.random() * 6;
-    dustParticles.rotation.z = Math.random() * 6;
-    dustParticles.scale.x = 1500;
-    dustParticles.scale.y = 1500;
-    dustParticles.scale.z = 1500;
-    scene.add(dustParticles);
-}
-//destroyable cubes init
-
-// test cube in front of camera
-const geometry2 = new THREE.BoxGeometry();
-const material2 = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-const cube2 = new THREE.Mesh(geometry2, material2);
-scene.add(cube2);
-
-// test cube behind camera
-const geometry3 = new THREE.BoxGeometry();
-const material3 = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-const cube3 = new THREE.Mesh(geometry3, material3);
-scene.add(cube3);
-
-cube2.position.set(2, 0, -9);
-cube3.position.set(0, 0, 5);
-
-cube2.tag = "destroyable";
-cube3.tag = "destroyable";
 
 
 // helper init
+/*
 const size = 20;
 const divisions = 20;
 
@@ -201,12 +143,17 @@ scene.add(gridHelper);
 
 const axesHelper = new THREE.AxesHelper(10);
 scene.add(axesHelper);
-
+*/
 
 
 //
 //functions
 //
+
+const initEnvironment = () => {
+    createStars(scene);
+    createDestroyables(scene);
+}
 const onWindowResize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -223,8 +170,9 @@ const animate = () => {
 
 
     shooting.updateRaycast(playerCube);
-    shooting.moveBullets(delta, scene, camera);
     shooting.shoot(delta, 0.2, playerCube, scene, camera);
+    shooting.moveBullets(delta, scene, camera);
+    
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);
     composer.render();
@@ -237,7 +185,9 @@ const animate = () => {
 //
 
 loadModel('/models/alus.gltf', playerCube, tuomaanalus,  worldTexture);
-shooting.initRaycast(playerCube, scene, 7);
+playerCube.scale.set(0.8, 0.8, 0.8);
+shooting.initRaycast(playerCube, scene, 12, camera);
+initEnvironment();
 window.addEventListener('mousemove', (e) => controls.onMouseMove(e), false);
 window.addEventListener('resize', () => onWindowResize(), false);
 animate();
