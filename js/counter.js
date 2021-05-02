@@ -2,7 +2,7 @@
  * https://discourse.threejs.org/t/be-solved-how-to-find-objects-return-an-array/6685/2
  */
 
-import * as THREE from '/three.js-dev/build/three.module.js';
+import * as THREE from '../three.js-dev/build/three.module.js';
 
 
 // ois voinu kans käyttää spritee mut sen position oli vaikee määritellä ku kamera liikkuu
@@ -62,5 +62,4 @@ export function countDestroyableObjects(scene) {
     scene.getObjectsByTag( 'destroyable', objects ); // the found objects are written in the given array
     //console.log(objects);
     displayDestroyableObjects(objects );
-
 }

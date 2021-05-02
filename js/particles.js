@@ -1,5 +1,5 @@
-import * as THREE from '/three.js-dev/build/three.module.js';
-import {loadModel} from '/js/modelLoader.js';
+import * as THREE from '../three.js-dev/build/three.module.js';
+import {loadModel} from '../js/modelLoader.js';
 
 export let destroyables = [];
 
@@ -73,7 +73,7 @@ export const createDestroyables = (scene) => {
         mesh.rotation.z = Math.random();
 
         mesh.tag = "destroyable";
-        loadModel('/models/asteroid.gltf', mesh,  [{
+        loadModel('./models/asteroid.gltf', mesh,  [{
             name: "Material",
             roughness: 0.8,
             color: 0x505062

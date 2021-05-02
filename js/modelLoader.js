@@ -1,5 +1,5 @@
-import * as THREE from '/three.js-dev/build/three.module.js';
-import { GLTFLoader } from '/three.js-dev/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from '../three.js-dev/build/three.module.js';
+import { GLTFLoader } from '../three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 
 const defaults = [
     {

@@ -1,18 +1,21 @@
-import * as THREE from '/three.js-dev/build/three.module.js';
-//import {OrbitControls} from '/three.js-dev/examples/jsm/controls/OrbitControls.js';
-import { FlyControls } from '/three.js-dev/examples/jsm/controls/FlyControls.js';
-import { GLTFLoader } from '/three.js-dev/examples/jsm/loaders/GLTFLoader.js';
-import { EffectComposer } from '/three.js-dev/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from '/three.js-dev/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from '/three.js-dev/examples/jsm/postprocessing/UnrealBloomPass.js';
+import * as THREE from '../three.js-dev/build/three.module.js';
+//import {OrbitControls} from '../three.js-dev/examples/jsm/controls/OrbitControls.js';
+import { FlyControls } from '../three.js-dev/examples/jsm/controls/FlyControls.js';
+import { GLTFLoader } from '../three.js-dev/examples/jsm/loaders/GLTFLoader.js';
+import { EffectComposer } from '../three.js-dev/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from '../three.js-dev/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from '../three.js-dev/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-import * as controls from '/js/controls.js';
-import * as shooting from '/js/shooting2.js';
-import * as menu from '/js/menu.js';
+import * as controls from '../js/controls.js';
+import * as shooting from '../js/shooting2.js';
+import * as menu from '../js/menu.js';
 
-import {loadModel} from '/js/modelLoader.js';
-import {countDestroyableObjects} from "/js/counter.js";
-import {createStars, createDestroyables} from '/js/particles.js';
+import {loadModel} from '../js/modelLoader.js';
+import {countDestroyableObjects} from "../js/counter.js";
+import {createStars, createDestroyables} from '../js/particles.js';
+
+// for vr
+//import { VRButton } from '../three.js-dev/examples/jsm/webxr/VRButton.js';
 
 //
 //initialize
@@ -27,6 +30,9 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+// for vr
+//renderer.xr.enabled = true;
 
 document.body.appendChild(renderer.domElement);
 
@@ -279,13 +285,19 @@ if(buttons){
                 shipTextures = destroyer;
             }
 
-            loadModel('/models/'+selected+'.gltf', playerCube, shipTextures,  worldTexture);
+            loadModel('./models/'+selected+'.gltf', playerCube, shipTextures,  worldTexture);
             playerCube.scale.set(0.8, 0.8, 0.8);
             initEnvironment();
             shooting.initRaycast(playerCube, scene, 12, camera);
             window.addEventListener('mousemove', (e) => controls.onMouseMove(e), false);
             window.addEventListener('resize', () => onWindowResize(), false);
+
+            // for vr
+            //document.body.appendChild( VRButton.createButton( renderer ) );
+
             animate();
+            // for vr
+           // renderer.setAnimationLoop( animate );
         });
     }
 }

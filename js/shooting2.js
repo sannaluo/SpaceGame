@@ -1,7 +1,7 @@
-import * as THREE from '/three.js-dev/build/three.module.js';
-import { loadModel } from '/js/modelLoader.js';
-import { TWEEN } from '/three.js-dev/examples/jsm/libs/tween.module.min.js'
-import { destroyables } from '/js/particles.js';
+import * as THREE from '../three.js-dev/build/three.module.js';
+import { loadModel } from '../js/modelLoader.js';
+import { TWEEN } from '../three.js-dev/examples/jsm/libs/tween.module.min.js'
+import { destroyables } from '../js/particles.js';
 
 //
 // variables
@@ -21,7 +21,7 @@ let attackRange = 5;
 let arrowHelper = new THREE.ArrowHelper()
 
 //crosshair vars init
-const crosshairMap = new THREE.TextureLoader().load('/textures/crosshair.png');
+const crosshairMap = new THREE.TextureLoader().load('./textures/crosshair.png');
 const crosshairMaterial = new THREE.SpriteMaterial({
     map: crosshairMap,
     depthTest: false
@@ -79,7 +79,7 @@ export const createBullet = (player, scene, camera) => {
     let bullet = new THREE.Mesh(geometry, material);
 
 
-    loadModel('/models/laser.gltf', bullet, [{
+    loadModel('./models/laser.gltf', bullet, [{
         name: "laser",
         color: 0x00ff00,
         emissive: 0x00ff00,
@@ -136,7 +136,7 @@ export const moveBullets = (delta, scene) => {
                     deleteBullet(indexB, scene);
                 }
                 deleteDestroyable(indexD, scene);
-                console.log(destroyables);
+               // console.log(destroyables);
             }
         }
     };

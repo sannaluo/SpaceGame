@@ -1,8 +1,8 @@
-import * as THREE from '/three.js-dev/build/three.module.js';
+import * as THREE from '../three.js-dev/build/three.module.js';
 
 let colour = 0xffffff;
 
-const map = new THREE.TextureLoader().load( '/textures/white-crosshair.png' );
+const map = new THREE.TextureLoader().load( './textures/white-crosshair.png' );
 const material = new THREE.SpriteMaterial( { map: map, color: colour } );
 
 const sprite = new THREE.Sprite( material );
