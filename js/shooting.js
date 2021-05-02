@@ -62,7 +62,7 @@ function shootAt(scene, camera, pos, playerCube) {
             scene.remove(bullet);
         }, 1000);
 
-        if (bullet.velocity == pos) {
+        if (bullet.velocity === pos) {
             console.log("same");
             bullet.alive = false;
             scene.remove(bullet);
@@ -82,7 +82,7 @@ function shootAt(scene, camera, pos, playerCube) {
 function moveBullets() {
     for (let index = 0; index < bullets.length; index += 1) {
         if (bullets[index] === undefined) continue;
-        if (bullets[index].alive == false) {
+        if (bullets[index].alive === false) {
             bullets.splice(index, 1);
             continue;
         }
@@ -94,6 +94,7 @@ function moveBullets() {
  * Shoots balls when spacebar is pressed down.
  * @param camera
  * @param scene
+ * @param playerCube
  */
 export function shoot(camera, scene, playerCube) {
     raycaster.setFromCamera(rayDirection, camera);

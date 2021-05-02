@@ -1,8 +1,12 @@
 import * as THREE from '/three.js-dev/build/three.module.js';
+import { loadModel } from '/js/modelLoader.js';
+import { TWEEN } from '/three.js-dev/examples/jsm/libs/tween.module.min.js'
+import { destroyables } from '/js/particles.js';
 
 //
 // variables
 //
+
 
 //bullet vars
 let bullets = [];
@@ -10,9 +14,9 @@ let timeElapsed = 0;
 
 //raycaster vars
 let raycaster = new THREE.Raycaster();
-let raycastPos = new THREE.Vector3();
-let raycastDir = new THREE.Vector3();
-let raycastRange = 5;
+let attackStartPos = new THREE.Vector3();
+let attackDir = new THREE.Vector3();
+let attackRange = 5;
 
 let arrowHelper = new THREE.ArrowHelper()
 
@@ -28,18 +32,19 @@ crosshairSprite.scale.set(0.76, 0.6, 0.7);
 // functions
 //
 
-export const initRaycast = (obj, scene, range) => {
+export const initRaycast = (obj, scene, range, camera) => {
     //init raycaster
-    raycastRange = range;
+    raycaster.setFromCamera(new THREE.Vector2(), camera);
+    attackRange = range;
     raycaster.near = 0;
-    raycaster.far = raycastRange;
+    raycaster.far = attackRange;
 
     //init helper arrow
-    /*
-    arrowHelper.setLength(raycaster.far);
-    arrowHelper.setColor(0xff0d20);
-    scene.add(arrowHelper);
-    */
+
+    //arrowHelper.setLength(raycaster.far);
+    //arrowHelper.setColor(0xff0d20);
+    //scene.add(arrowHelper);
+
 
     //init crosshair
     scene.add(crosshairSprite);
@@ -48,33 +53,44 @@ export const initRaycast = (obj, scene, range) => {
 };
 
 export const updateRaycast = (obj) => {
-
-    //raycaster
+    //set attack start and direction
     let shipRotation = new THREE.Quaternion();
     obj.getWorldQuaternion(shipRotation);
-    raycastDir = new THREE.Vector3(0, 0, -1).applyQuaternion(shipRotation); //get raycaster direction
-    obj.getWorldPosition(raycastPos.applyQuaternion(obj.quaternion)); //get raycaster origin
-
-    raycaster.set(raycastPos, raycastDir);
+    attackDir = new THREE.Vector3(0, 0, -1).applyQuaternion(shipRotation); //get attack direction
+    obj.getWorldPosition(attackStartPos.applyQuaternion(obj.quaternion)); //get attack start
+    raycaster.set(attackStartPos, attackDir);
 
     //arrow helper
-    /*
-    arrowHelper.setDirection(raycaster.ray.direction);
-    arrowHelper.position.copy(raycaster.ray.origin);
-    */
+    //arrowHelper.setDirection(raycaster.ray.direction);
+    //arrowHelper.position.copy(raycaster.ray.origin);
+
 
     //crosshair position to raycast point
-    crosshairSprite.position.copy(raycaster.ray.direction).multiplyScalar(raycastRange);
-    crosshairSprite.position.add(raycaster.ray.origin);
+    crosshairSprite.position.copy(attackDir).multiplyScalar(attackRange);
+    crosshairSprite.position.add(attackStartPos);
 };
 
 export const createBullet = (player, scene, camera) => {
     //create 3d object
     const geometry = new THREE.BoxGeometry(0.3, 0.06, 0.2);
-    let material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+    let material = new THREE.MeshPhysicalMaterial({ color: 0x00ff00 });
     material.transparent = true;
-    material.opacity = 0.8;
+    material.opacity = 0;
     let bullet = new THREE.Mesh(geometry, material);
+
+
+    loadModel('/models/laser.gltf', bullet, [{
+        name: "laser",
+        color: 0x00ff00,
+        emissive: 0x00ff00,
+        emissiveIntensity: 22,
+    },{
+        name: "reuna",
+        color: 0x00ff00,
+        emissive: 0x00ff00,
+        emissiveIntensity: 20,
+
+    }]);
 
     //match position and rotation with player
     player.getWorldPosition(bullet.position);
@@ -82,8 +98,8 @@ export const createBullet = (player, scene, camera) => {
 
     //set destination vector to where player is facing at camera far distance
     let dest = new THREE.Vector3();
-    dest.copy(raycaster.ray.direction).multiplyScalar(camera.far + 5);
-    dest.add(raycaster.ray.origin);
+    dest.copy(attackDir).multiplyScalar(camera.far + 5);
+    dest.add(attackStartPos);
     bullet.velocity = dest;
 
     bullets.push(bullet);
@@ -91,15 +107,17 @@ export const createBullet = (player, scene, camera) => {
 };
 
 const deleteBullet = (index, scene) => {
-    //deletes bullet from bullets array and scene
     scene.remove(bullets[index]);
-    //bullets.splice(index);
-}
+};
+
+const deleteDestroyable = (index, scene) => {
+    scene.remove(destroyables[index]);
+};
 
 export const moveBullets = (delta, scene) => {
-    for (let [index, bullet] of bullets.entries()) {
-        //calculate distance from target
+    for (let [indexB, bullet] of bullets.entries()) {
 
+        //calculate distance from target
         let target = new THREE.Vector3();
         target.copy(bullet.velocity);
 
@@ -107,22 +125,35 @@ export const moveBullets = (delta, scene) => {
         currentPos.copy(bullet.position);
 
         if (currentPos.distanceTo(target) > 1 || currentPos.distanceTo(target) < -1) {
+            bullet.position.lerp(target, delta * 0.1);
+        } else {
+            deleteBullet(indexB, scene);
+        };
 
-            //.multiplyScalar(camera.far / raycastRange)
-            bullet.position.lerp(target, delta * 0.4);
-        } else {  
-            deleteBullet(index, scene);
+        for (let [indexD, destroyable] of destroyables.entries()) {
+            if (currentPos.distanceTo(destroyable.position) < 0.5 && currentPos.distanceTo(destroyable.position) > -0.5) {
+                if(destroyable.parent === scene) {
+                    deleteBullet(indexB, scene);
+                }
+                deleteDestroyable(indexD, scene);
+                console.log(destroyables);
+            }
         }
-
-    }
+    };
 };
 
 export const shoot = (delta, firerate, player, scene, camera) => {
 
-    if (timeElapsed >= firerate ) {
-        createBullet(player, scene, camera);
-        timeElapsed = 0;
-    } else {
-        timeElapsed += delta;
+    const rayIntersects = raycaster.intersectObjects(scene.children, true);
+    for (let intersection of rayIntersects) {
+        if (intersection.object.tag === "destroyable") {
+            if (timeElapsed >= firerate) {
+
+                createBullet(player, scene, camera);
+                timeElapsed = 0;
+            } else {
+                timeElapsed += delta;
+            };
+        };
     };
 };

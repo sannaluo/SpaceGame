@@ -45,10 +45,10 @@ function displayDestroyableObjects(objects) {
 
     //console.log(amount);
 
-    document.getElementById("counter").innerText = "Objects left to destroy: \n" + amount.toString();
+    document.getElementById("counter").innerText = "Meteors left to destroy: \n" + amount.toString();
 
     if(amount === 0) {
-        document.getElementById("counter").innerText = "You have destroyed all objects!";
+        document.getElementById("counter").innerText = "You have destroyed all meteors!";
     }
 
 }

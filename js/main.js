@@ -5,15 +5,14 @@ import { GLTFLoader } from '/three.js-dev/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from '/three.js-dev/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from '/three.js-dev/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from '/three.js-dev/examples/jsm/postprocessing/UnrealBloomPass.js';
+
 import * as controls from '/js/controls.js';
-import {loadModel} from '/js/modelLoader.js';
-
-// import {shoot} from '/js/shooting.js';
-// import {breaking} from '/js/breaking.js';
-import {countDestroyableObjects} from "/js/counter.js";
 import * as shooting from '/js/shooting2.js';
-
 import * as menu from '/js/menu.js';
+
+import {loadModel} from '/js/modelLoader.js';
+import {countDestroyableObjects} from "/js/counter.js";
+import {createStars, createDestroyables} from '/js/particles.js';
 
 //
 //initialize
@@ -60,10 +59,10 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 scene.add(camera);
 
 //lights init
-let light = new THREE.DirectionalLight(0xFFFFFF);
+let light = new THREE.DirectionalLight(0xdedede);
 scene.add(light);
 
-light = new THREE.AmbientLight(0x404040);
+light = new THREE.AmbientLight(0xb0b0b0);
 scene.add(light);
 
 // controls init
@@ -115,13 +114,27 @@ const tuomaanalus = [
     }
 ];
 
+const destroyer = [
+    {
+        name: "tuulilasi",
+        roughness: 0,
+        emissive: "baseColor",
+        emissiveIntensity: 0.5,
+    },
+    {
+        name: "moottori",
+        roughness: 1,
+        emissive: "baseColor",
+        emissiveIntensity: 3,
+    }
+];
 
 //bloom init
 const params = {
     exposure: 1,
-    bloomStrength: 0.5,
-    bloomThreshold: 0.5,
-    bloomRadius: 0.5
+    bloomStrength: 0.8,
+    bloomThreshold: 0.55,
+    bloomRadius: 0
 };
 const renderScene = new RenderPass(scene, camera);
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
@@ -133,6 +146,7 @@ const composer = new EffectComposer(renderer);
 composer.addPass(renderScene);
 composer.addPass(bloomPass);
 
+/*
 //environment init 
 const dustGeometry = new THREE.BufferGeometry();
 const dustMaterials = [];
@@ -174,6 +188,7 @@ for (let i = 0; i < dustParameters.length; i++) {
     dustParticles.scale.z = 1500;
     scene.add(dustParticles);
 }
+
 //destroyable cubes init
 
 // test cube in front of camera
@@ -193,9 +208,10 @@ cube3.position.set(0, 0, 5);
 
 cube2.tag = "destroyable";
 cube3.tag = "destroyable";
-
+*/
 
 // helper init
+/*
 const size = 20;
 const divisions = 20;
 
@@ -205,11 +221,16 @@ scene.add(gridHelper);
 const axesHelper = new THREE.AxesHelper(10);
 scene.add(axesHelper);
 
-
+*/
 
 //
 //functions
 //
+const initEnvironment = () => {
+    createStars(scene);
+    createDestroyables(scene);
+};
+
 const onWindowResize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -221,8 +242,6 @@ const onWindowResize = () => {
 
 const animate = () => {
 
-
-
     let delta = clock.getDelta();
     requestAnimationFrame(animate);
     controls.lookAtMouseLocation(playerCube);
@@ -232,8 +251,9 @@ const animate = () => {
     countDestroyableObjects(scene);
 
     shooting.updateRaycast(playerCube);
-    shooting.moveBullets(delta, scene, camera);
     shooting.shoot(delta, 0.2, playerCube, scene, camera);
+    shooting.moveBullets(delta, scene, camera);
+
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);
     composer.render();
@@ -254,8 +274,15 @@ if(buttons){
             let selected = buttons[i].id;
             menu.hideMenu();
 
-            loadModel('/models/'+selected+'.gltf', playerCube, tuomaanalus,  worldTexture);
-            shooting.initRaycast(playerCube, scene, 7);
+            let shipTextures = tuomaanalus;
+            if(selected === "destroyer") {
+                shipTextures = destroyer;
+            }
+
+            loadModel('/models/'+selected+'.gltf', playerCube, shipTextures,  worldTexture);
+            playerCube.scale.set(0.8, 0.8, 0.8);
+            initEnvironment();
+            shooting.initRaycast(playerCube, scene, 12, camera);
             window.addEventListener('mousemove', (e) => controls.onMouseMove(e), false);
             window.addEventListener('resize', () => onWindowResize(), false);
             animate();
