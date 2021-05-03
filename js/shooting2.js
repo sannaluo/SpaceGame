@@ -2,6 +2,7 @@ import * as THREE from '../three.js-dev/build/three.module.js';
 import { loadModel } from '../js/modelLoader.js';
 import { TWEEN } from '../three.js-dev/examples/jsm/libs/tween.module.min.js'
 import { destroyables } from '../js/particles.js';
+import {playMusic} from "../js/music.js";
 
 //
 // variables
@@ -21,16 +22,19 @@ let attackRange = 5;
 let arrowHelper = new THREE.ArrowHelper()
 
 //crosshair vars init
-const crosshairMap = new THREE.TextureLoader().load('./textures/crosshair.png');
+const crosshairMap = new THREE.TextureLoader().load('./textures/crosshair2.png');
 const crosshairMaterial = new THREE.SpriteMaterial({
     map: crosshairMap,
     depthTest: false
 });
 let crosshairSprite = new THREE.Sprite(crosshairMaterial);
-crosshairSprite.scale.set(0.76, 0.6, 0.7);
+crosshairSprite.scale.set(1.5, 1.5, 0.7);
 //
 // functions
 //
+
+
+
 
 export const initRaycast = (obj, scene, range, camera) => {
     //init raycaster
@@ -150,6 +154,9 @@ export const shoot = (delta, firerate, player, scene, camera) => {
             if (timeElapsed >= firerate) {
 
                 createBullet(player, scene, camera);
+
+                playMusic(camera, 'laser-pew');
+
                 timeElapsed = 0;
             } else {
                 timeElapsed += delta;
@@ -157,3 +164,4 @@ export const shoot = (delta, firerate, player, scene, camera) => {
         };
     };
 };
+

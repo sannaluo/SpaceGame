@@ -13,6 +13,7 @@ import * as menu from '../js/menu.js';
 import {loadModel} from '../js/modelLoader.js';
 import {countDestroyableObjects} from "../js/counter.js";
 import {createStars, createDestroyables} from '../js/particles.js';
+import {playMusic} from "../js/music.js";
 
 // for vr
 //import { VRButton } from '../three.js-dev/examples/jsm/webxr/VRButton.js';
@@ -152,6 +153,7 @@ const composer = new EffectComposer(renderer);
 composer.addPass(renderScene);
 composer.addPass(bloomPass);
 
+
 /*
 //environment init 
 const dustGeometry = new THREE.BufferGeometry();
@@ -232,6 +234,11 @@ scene.add(axesHelper);
 //
 //functions
 //
+
+
+
+
+
 const initEnvironment = () => {
     createStars(scene);
     createDestroyables(scene);
@@ -247,6 +254,7 @@ const onWindowResize = () => {
 
 
 const animate = () => {
+
 
     let delta = clock.getDelta();
     requestAnimationFrame(animate);
@@ -273,7 +281,11 @@ const animate = () => {
 
 const buttons = document.getElementsByClassName("selectBtn");
 
+
 if(buttons){
+
+
+
     for(let i = 0; i < buttons.length; i++) {
 
         buttons[i].addEventListener('click', function () {
@@ -288,6 +300,7 @@ if(buttons){
             loadModel('./models/'+selected+'.gltf', playerCube, shipTextures,  worldTexture);
             playerCube.scale.set(0.8, 0.8, 0.8);
             initEnvironment();
+            playMusic(camera, 'space-ambient', true);
             shooting.initRaycast(playerCube, scene, 12, camera);
             window.addEventListener('mousemove', (e) => controls.onMouseMove(e), false);
             window.addEventListener('resize', () => onWindowResize(), false);
