@@ -11,6 +11,7 @@ import {stopMusic} from "../js/music.js";
 // ois voinu kans käyttää spritee mut sen position oli vaikee määritellä ku kamera liikkuu
 //const counterSprite = new THREE.Sprite( material );
 
+
 let isVictory = false;
 
 
@@ -37,7 +38,7 @@ THREE.Object3D.prototype.getObjectsByTag = function( tag, result ) {
 };
 
 /**
- * Changes the inner text of counter element
+ * Changes the inner text of counter element and plays victory music
  * @param objects
  * @param camera
  */
@@ -57,6 +58,7 @@ function displayDestroyableObjects(objects, camera) {
         document.getElementById("counter").innerText = "You have destroyed all asteroids!";
 
         if(isVictory === false) {
+            // soitetaan musiikki vain kerran
             isVictory = true;
             stopMusic();
             playMusic(camera, 'DISCO Party - Royalty Free DISCO Music by EPPACO', true)

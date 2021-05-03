@@ -92,7 +92,7 @@ playerCube.position.set(0, -0.5, -1);
 
 camera.add(playerCube);
 
-
+// ship texture settings
 const tuomaanalus = [
     {
         name: "runko",
@@ -154,89 +154,9 @@ composer.addPass(renderScene);
 composer.addPass(bloomPass);
 
 
-/*
-//environment init 
-const dustGeometry = new THREE.BufferGeometry();
-const dustMaterials = [];
-const dustVertices = [];
-let dustParticles;
-
-for (let i = 0; i < 150000; i++) {
-
-    const x = THREE.MathUtils.randFloatSpread(1);
-    const y = THREE.MathUtils.randFloatSpread(1);
-    const z = THREE.MathUtils.randFloatSpread(1);
-
-    dustVertices.push(x, y, z);
-}
-dustGeometry.setAttribute('position', new THREE.Float32BufferAttribute(dustVertices, 3));
-const dustParameters = [
-    [0xFFFBAE, 0.05],
-    [0xFFCEAE, 0.02],
-    [0xFFE3AE, 0.051],
-    [0xFFF9AE, 0.02],
-    [0xFFF2AE, 0.01]
-];
-
-for (let i = 0; i < dustParameters.length; i++) {
-
-    const color = dustParameters[i][0];
-    const size = dustParameters[i][1];
-
-    dustMaterials[i] = new THREE.PointsMaterial({ size: size, blending: THREE.AdditiveBlending, depthTest: true });
-    dustMaterials[i].color.setHex(color,);
-
-    dustParticles = new THREE.Points(dustGeometry, dustMaterials[i]);
-
-    dustParticles.rotation.x = Math.random() * 6;
-    dustParticles.rotation.y = Math.random() * 6;
-    dustParticles.rotation.z = Math.random() * 6;
-    dustParticles.scale.x = 1500;
-    dustParticles.scale.y = 1500;
-    dustParticles.scale.z = 1500;
-    scene.add(dustParticles);
-}
-
-//destroyable cubes init
-
-// test cube in front of camera
-const geometry2 = new THREE.BoxGeometry();
-const material2 = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-const cube2 = new THREE.Mesh(geometry2, material2);
-scene.add(cube2);
-
-// test cube behind camera
-const geometry3 = new THREE.BoxGeometry();
-const material3 = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-const cube3 = new THREE.Mesh(geometry3, material3);
-scene.add(cube3);
-
-cube2.position.set(2, 0, -9);
-cube3.position.set(0, 0, 5);
-
-cube2.tag = "destroyable";
-cube3.tag = "destroyable";
-*/
-
-// helper init
-/*
-const size = 20;
-const divisions = 20;
-
-const gridHelper = new THREE.GridHelper(size, divisions);
-scene.add(gridHelper);
-
-const axesHelper = new THREE.AxesHelper(10);
-scene.add(axesHelper);
-
-*/
-
 //
 //functions
 //
-
-
-
 
 
 const initEnvironment = () => {
@@ -249,9 +169,7 @@ const onWindowResize = () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     composer.setSize(window.innerWidth, window.innerHeight);
-
 };
-
 
 const animate = () => {
 
@@ -280,10 +198,7 @@ const animate = () => {
 
 const buttons = document.getElementsByClassName("selectBtn");
 
-
 if(buttons){
-
-
 
     for(let i = 0; i < buttons.length; i++) {
 
@@ -291,7 +206,9 @@ if(buttons){
             let selected = buttons[i].id;
             menu.hideMenu();
 
+            // set texture settings to selected model
             let shipTextures = tuomaanalus;
+
             if(selected === "destroyer") {
                 shipTextures = destroyer;
             }
@@ -313,8 +230,6 @@ if(buttons){
         });
     }
 }
-
-
 
 
 

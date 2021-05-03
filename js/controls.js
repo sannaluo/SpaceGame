@@ -12,14 +12,25 @@ var mouse = new THREE.Vector2();
 
 const mapRange = (value,inMin,inMax,outMin,outMax)=>(value-inMin)*(outMax-inMax)/(outMin-inMin)+inMax;
 
-//change spaceship rotation depending on angle
+
+/**
+ * change spaceship rotation depending on angle
+ * @param obj
+ */
 export const lookAtMouseLocation = (obj) => {
     obj.rotation.x = mouse.y * 0.2;
     obj.rotation.y = mouse.x * -0.2;
     obj.rotation.z = mouse.y * mouse.x * -0.6;
 };
 
-//change speed and fov depending on angle
+
+/**
+ * change speed and fov depending on angle
+ * @param camera
+ * @param controls
+ * @param fov
+ * @param movementSpeed
+ */
 export const changeSpeed = (camera, controls, fov, movementSpeed) => {
     const distanceFactor = Math.sqrt((mouse.x * mouse.x) + (mouse.y * mouse.y)); // distance from center
     const fovDistanceFactor = mapRange(distanceFactor, 0, 1, 1, 0.85); // clamp and invert value range
@@ -33,9 +44,13 @@ export const changeSpeed = (camera, controls, fov, movementSpeed) => {
 
     camera.fov = fov * fovDistanceFactor;
     controls.movementSpeed = movementSpeed * speedDistanceFactor;
-}
+};
     
-//update mouse position on mousemove event
+
+/**
+ * update mouse position on mousemove event
+ * @param e
+ */
 export const onMouseMove = (e) => {
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;

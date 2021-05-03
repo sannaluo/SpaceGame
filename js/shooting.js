@@ -2,6 +2,10 @@
  * used help from https://github.com/saucecode/threejs-demos/blob/master/09_Shooting/demo.js
  */
 
+/**
+ * This file is not used. See shooting2.js
+ */
+
 import * as THREE from '/three.js-dev/build/three.module.js';
 import { targeting } from '/js/targeting.js';
 

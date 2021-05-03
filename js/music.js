@@ -2,6 +2,12 @@ import * as THREE from '../three.js-dev/build/three.module.js';
 
 let currentsound;
 
+/**
+ * Plays audio
+ * @param camera
+ * @param source
+ * @param loop
+ */
 export const playMusic = (camera, source, loop = false) => {
 
 // create an AudioListener and add it to the camera
@@ -24,9 +30,11 @@ export const playMusic = (camera, source, loop = false) => {
         currentsound = sound;
     }
 
-
 };
 
+/**
+ * stops the current looping audio
+ */
 export const stopMusic = () => {
     currentsound.stop();
 };

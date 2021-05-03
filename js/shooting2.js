@@ -29,13 +29,18 @@ const crosshairMaterial = new THREE.SpriteMaterial({
 });
 let crosshairSprite = new THREE.Sprite(crosshairMaterial);
 crosshairSprite.scale.set(1.5, 1.5, 0.7);
+
 //
 // functions
 //
 
-
-
-
+/**
+ * inits raycast
+ * @param obj
+ * @param scene
+ * @param range
+ * @param camera
+ */
 export const initRaycast = (obj, scene, range, camera) => {
     //init raycaster
     raycaster.setFromCamera(new THREE.Vector2(), camera);
@@ -56,6 +61,10 @@ export const initRaycast = (obj, scene, range, camera) => {
     updateRaycast(obj);
 };
 
+/**
+ * updates raycast
+ * @param obj
+ */
 export const updateRaycast = (obj) => {
     //set attack start and direction
     let shipRotation = new THREE.Quaternion();
@@ -74,6 +83,12 @@ export const updateRaycast = (obj) => {
     crosshairSprite.position.add(attackStartPos);
 };
 
+/**
+ * creates bullet
+ * @param player
+ * @param scene
+ * @param camera
+ */
 export const createBullet = (player, scene, camera) => {
     //create 3d object
     const geometry = new THREE.BoxGeometry(0.3, 0.06, 0.2);
@@ -118,6 +133,11 @@ const deleteDestroyable = (index, scene) => {
     scene.remove(destroyables[index]);
 };
 
+/**
+ * gives bullets velocity
+ * @param delta
+ * @param scene
+ */
 export const moveBullets = (delta, scene) => {
     for (let [indexB, bullet] of bullets.entries()) {
 
@@ -146,6 +166,14 @@ export const moveBullets = (delta, scene) => {
     };
 };
 
+/**
+ * checks if raycast intersects with destroyable objects
+ * @param delta
+ * @param firerate
+ * @param player
+ * @param scene
+ * @param camera
+ */
 export const shoot = (delta, firerate, player, scene, camera) => {
 
     const rayIntersects = raycaster.intersectObjects(scene.children, true);
