@@ -255,14 +255,13 @@ const onWindowResize = () => {
 
 const animate = () => {
 
-
     let delta = clock.getDelta();
     requestAnimationFrame(animate);
     controls.lookAtMouseLocation(playerCube);
     controls.changeSpeed(camera, flyControls, fov, movementSpeed);
     flyControls.update(delta);
 
-    countDestroyableObjects(scene);
+    countDestroyableObjects(scene, camera);
 
     shooting.updateRaycast(playerCube);
     shooting.shoot(delta, 0.2, playerCube, scene, camera);
